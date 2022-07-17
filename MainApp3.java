@@ -17,7 +17,7 @@ public class MainApp3 {
 		
 		// INTRODUCIMOS LOS ARTICULOSY LAS CANTIDADES DE UNIDADES EN EL STOCK GUARDANDOLOS CADA VEZ
 		do {
-			Object articulo = selectArticle();
+			Object articulo = selectArticle(0);
 			int cantidad = numArticles();
 			storeArticle(stock, articulo, cantidad);
 			nextArticle = showOption();
@@ -27,7 +27,7 @@ public class MainApp3 {
 		showStock(stock);
 		
 		// FINALMENTE SELECCIONAMOS UN ARTICULO PARA QUE NOS MUESTRE EL DETALLE		
-		Object articulo = selectArticle();	
+		Object articulo = selectArticle(1);	
 		showArticle(stock, articulo);		
 
 
@@ -55,9 +55,12 @@ public class MainApp3 {
 	/**
 	 * @return the article selected to incorporate to stock database
 	 */
-	public static Object selectArticle() {
+	public static Object selectArticle(int key) {
+		
+		String chart[] = {"AÑADIR AL STOCK",  "CONSULTAR ARTÍCULO"};
+		String label[] = {"Añadir artículo al stock", "Consultar artículo del stock"};
 		   
-		Object selectionData = JOptionPane.showInputDialog(new JFrame(), "Añadir artículo al stock","AÑADIR AL STOCK",JOptionPane.INFORMATION_MESSAGE, null, 
+		Object selectionData = JOptionPane.showInputDialog(new JFrame(), label[key],chart[key],JOptionPane.INFORMATION_MESSAGE, null, 
 				new Object[] { "Boligrafo", "Zapatillas","Guantes", "Camiseta", "Bandolera", "Abrigo", "Pantalones", "Calcetines", "Gemelos", "Americana" }, 
 				"Zapatillas");
 		
@@ -103,7 +106,13 @@ public class MainApp3 {
 	 */
 	public static void showArticle(Hashtable<String, Integer> table, Object articulo) {
 		
-		JOptionPane.showMessageDialog(null, "ARTÍCULO: "+articulo+"\nUNIDADES: "+table.get(articulo).toString().replace("{", "\n").replace("}", "").replace(",", "\n").replace("=", "").replace("'", ""), "DETALLE DEL ARTÍCULO", JOptionPane.INFORMATION_MESSAGE);
+		if (table.get(articulo) != null) {
+			JOptionPane.showMessageDialog(null, "ARTÍCULO: "+articulo+"\nUNIDADES: "+table.get(articulo).toString().replace("{", "\n").replace("}", "").replace(",", "\n").replace("=", "").replace("'", ""), "CONSULTAR ARTÍCULO", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(null, "No hay ningún "+articulo+" en stock");
+		};
+		
+		
 	}
 	
 	/**
