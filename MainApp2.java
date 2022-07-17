@@ -10,62 +10,142 @@ import javax.swing.JOptionPane;
  */
 public class MainApp2 extends JFrame{
 	
-	private final static float VAT = 0.21F;
+	private final static float IVA = 0.21F;
 
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		Hashtable<String, Float> articulos = new Hashtable<String, Float>();
+		Hashtable<String, Float> goods = new Hashtable<String, Float>();
+		boolean loop = false;
+		float cash = 0;
+		int unidades = 0;
 		
-		articulos.put("Boligrafo", 4.50F);
-		articulos.put("Zapatillas", 12.50F); 
-		articulos.put("Guantes", 7.40F);
-		articulos.put("Camiseta", 12.15F); 
-		articulos.put("Bandolera", 4.50F);
-		articulos.put("Abrigo", 49.50F);
-		articulos.put("Pantalones",60.60F); 
-		articulos.put("Calcetines", 4.50F);
-		articulos.put("Gemelos", 29.20F);
-		articulos.put("Americana", 78.20F);
+		// GENERAMOS LOS ARTICULOS DEL SUPERMERCADO
+		generateGoods(goods);
+		
+		// PASAMOS POR CAJA LOS ARTICULOS Y SU CANTIDAD HASTA PULSAR LA OPCION SALIR
+		do {
+			Object article = selectArticle();
+			int units = inputUnits();
+			float amount = priceArticle(goods, article, units);
+			cash += amount;
+			unidades += unidades;
+			loop = showOption();
+		}while(loop != false);
+		
+		float money = payment();
+		showPurchase(unidades, cash, money);
+		JOptionPane.showMessageDialog(null, "Feliz compra!");
 
-
-	
 	}
 	
 	/**
-	 * Shows the stock
+	 * Shows the purchase
 	 */
-	public static void showList() {
+	public static void showPurchase(int units, float cash, float change) {
 		
+		JOptionPane.showMessageDialog(null, "IVA: "+IVA+"% "+"UNIDADES: "+units+" BRUTO: "+cash+" PVP: "+cash*IVA+" CAMBIO: "+change);
+			
+	}
+	
+	public static float payment() {
 		
+		float parsedCash = 0;
+		String userData = JOptionPane.showInputDialog(null, "Introduzca la cantidad en efectivo","PROCESO DE PAGO");
+		if (userData == null) {
+			System.out.println("CANCELADO");
+			System.exit(0);
+		}else {
+			parsedCash = Integer.parseInt(userData);
+		}
+		return parsedCash;
+	}
+	
+	public static void generateGoods(Hashtable<String, Float> goods) {
+		
+		goods.put("Boligrafo", 2.50F);
+		goods.put("Zapatillas", 12.50F); 
+		goods.put("Guantes", 6.40F);
+		goods.put("Camiseta", 12.15F); 
+		goods.put("Bombilla", 2.50F);
+		goods.put("Abanico", 3.50F);
+		goods.put("Sombrero",60.60F); 
+		goods.put("Cortinas", 16.50F);
+		goods.put("Armilla", 29.20F);
+		goods.put("Lámpara", 78.20F);
 		
 	}
 	
+	/**
+	 * cash flow 
+	 */
+	public static float priceArticle(Hashtable<String, Float> goods, Object article,int units) {
+		
+		float cash = (float) goods.get(article);
+				
+		return cash*units;
+	
+	}
+	
+
 	/**
 	 * Article selector input
 	 */
-	public static void selectArticle() {
+	public static Object selectArticle() {
 	   
-		Object selectionData = JOptionPane.showInputDialog(new JFrame(), "Seleccione un artículo","CARRITO DE LA COMPRA",JOptionPane.INFORMATION_MESSAGE, null, 
-				new Object[] { "Peine", "Boligrafo", "Libreta", "Zapatillas", "Toalla", "Guantes", "Vajilla", "Olla", "Camiseta", "Bombilla", "Abanico", "Sombrero", "Cortinas", "Armilla", "Lámpara" }, 
-				"Zapatillas");
-   
-		System.out.println("El usuario ha elegido "+selectionData);
+		Object selectionData = JOptionPane.showInputDialog(new JFrame(), "Seleccione un artículo","FLUJO DE CAJA",JOptionPane.INFORMATION_MESSAGE, null, 
+				new Object[] { "Boligrafo", "Zapatillas", "Guantes", "Camiseta", "Bombilla", "Abanico", "Sombrero", "Cortinas", "Armilla", "Lámpara" }, 
+				"Boligrafo");
 		
-		inputUnits();
+		if (selectionData == null) {
+			System.out.println("CANCELADO");
+			System.exit(0);
+		}
 			
+		return selectionData;
+		
 	}
 	   
 	/**
-	 * Adds a new article
+	 * Article units input
 	 */
-	public static void inputUnits() {
+	public static int inputUnits() {
 		 
-	   String userData = JOptionPane.showInputDialog(null,"Cantidad de unidades del artículo","CARRITO DE LA COMPRA",JOptionPane.PLAIN_MESSAGE);
-	   System.out.println("El usuario ha elegido "+userData);
+	   int units = 0;	
+	   String userData = JOptionPane.showInputDialog(null,"Cantidad de unidades del artículo","FLUJO DE CAJA",JOptionPane.INFORMATION_MESSAGE);
+	   
+		if (userData == null) {
+			System.out.println("CANCELADO");
+			System.exit(0);
+		}else {
+			units = Integer.parseInt(userData);
+		}
+		return units;
+
 
    }
+	
+	/**
+	 * @return a boolean to break the cash flow loop
+	 */
+	public static boolean showOption() {
+		
+		boolean gate = false;
+		
+		int n = JOptionPane.showConfirmDialog(null, "Pase por caja el siguiente producto","FLUJO DE CAJA",JOptionPane.YES_NO_OPTION);
+		
+		if (n == JOptionPane.YES_OPTION) {
+			gate = true;
+		
+		} else if (n == JOptionPane.NO_OPTION) {
+		
+		} else {
+			
+		}
+		return gate;
+				
+	}
    
 	/**
 	 * @param priceUnit
@@ -74,9 +154,9 @@ public class MainApp2 extends JFrame{
 	 * 
 	 * Calculate final price for 
 	 */
-	public static float calculatePriceVAT(float priceUnit, int units ) {
+	public static float calculatePriceVAT(float total, int units ) {
 	   
-	   return priceUnit*units*VAT;
+	   return total*IVA;
 
    }
 	   
@@ -95,11 +175,9 @@ public class MainApp2 extends JFrame{
 		  return result;
 		  
 	}
-	
-	   
+   
 	   
 }
-	
 
 	   
 
