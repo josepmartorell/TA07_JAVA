@@ -19,7 +19,7 @@ public class MainApp1 {
 			media = calcularMedia(notasAlumno); 
 			
 			// GUARDAMOS LA INFORMACIÓN EN UN DICCIONARIO (CLAVE (STRING) ALUMNO / VALOR (FLOAT) NOTA PONDERADA)	
-			diccionarioAlumnos = guardarDatos(nombreAlumno, media);
+			guardarDatos(diccionarioAlumnos, nombreAlumno, media);
 			
 			// MOSTRAMOS POR PANTALLA LA INFORMACIÓN CONTENIDA EN LA FICHA DEL ALUMNO
 			mostrarDatos(diccionarioAlumnos);
@@ -28,7 +28,7 @@ public class MainApp1 {
 			nuevoAlumno = mostrarOpcion();
 			
 		}while(nuevoAlumno != false);
-			
+
 	}
 		
 	public static String introducirNombre() {
@@ -75,12 +75,10 @@ public class MainApp1 {
 		
 	}
 	
-	public static Hashtable<String, Float> guardarDatos(String nombreAlumno, float media) {
+	public static void guardarDatos(Hashtable<String, Float> diccionario, String nombreAlumno, float media) {
 		
-		Hashtable<String, Float> diccionario = new Hashtable<String, Float>();
 		diccionario.put(nombreAlumno, media);
 		
-		return diccionario;
 		
 	}
 	
